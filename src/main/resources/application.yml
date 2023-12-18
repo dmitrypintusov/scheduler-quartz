@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5434/scheduler
+    username: postgres
+    password: postgres
+    hikari:
+      schema: scheduler
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    schemas: scheduler
+
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: spring-boot-quartz
+            instanceId: AUTO
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 25
+            threadPriority: 5
+          jobStore:
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: <your-mail>
+    password: <your-password>
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+job:
+  email:
+    name: email-job
+    group: email-job-group
+    cron: 0 0/2 * * * ? # every 2 minutes
